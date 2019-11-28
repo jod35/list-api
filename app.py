@@ -1,4 +1,4 @@
-from flask import Flask,jsonify,abort
+from flask import Flask,jsonify,abort,make_response
 app=Flask(__name__)
 
 
@@ -23,6 +23,12 @@ tasks=[
         'done':False
     }
 ]
+
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error':'Not Found'}),'Not Found')
+
+
 
 #fetch all tasks
 @app.route('/tasks',methods=['GET'])
