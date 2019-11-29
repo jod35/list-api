@@ -2,7 +2,7 @@ from flask import Flask,jsonify,abort,make_response,request
 app=Flask(__name__)
 
 
-
+#our database
 tasks=[
     {
         'id':1,
@@ -44,6 +44,7 @@ def get_task(task_id):
     return jsonify({'task':task[0]})
 
 
+#create a task
 @app.route('/tasks',methods=['POST'])
 def create_tasks():
     if not request.json or not 'title' in request.json:
@@ -57,6 +58,7 @@ def create_tasks():
     tasks.append(task)
     return jsonify({'task':task}),201
 
+#update a task
 @app.route('/tasks/<int:task_id>',methods=['PUT'])
 def update_task(task_id):
     task=[task for task in tasks if task['id']==task_id]
@@ -76,6 +78,17 @@ def update_task(task_id):
     task[0]['done']=request.json.get('done',task[0]['done'])
 
     return jsonify({'task':task[0]})     
+
+#delete a task
+@app.route('/tasks/<int:task_id>',methods=['DELETE'])
+def delete_task(task_id):
+    task=[task for task in tasks if task['id']==task_id]
+    if len(task) ==0:
+        abort(404)
+    task.remove(task[0])
+    return jsonify({'result':True})
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
